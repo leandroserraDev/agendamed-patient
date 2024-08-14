@@ -2,7 +2,6 @@
 import ItemDoctor from './ItemDoctor.js';
 
 function TableDoctors({doctors}){
-    console.log(doctors);
 
     return (
     <div className=" absolute w-full h-full">

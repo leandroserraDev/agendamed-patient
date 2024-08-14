@@ -1,4 +1,5 @@
 
+import { es } from 'date-fns/locale/es';
 import ItemTableEspecialidade from './ItemTableEspecialidade.js';
 
 function TableEspecialidade({especialidades}){

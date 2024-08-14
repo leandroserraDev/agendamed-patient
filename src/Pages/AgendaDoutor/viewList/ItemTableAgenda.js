@@ -4,6 +4,12 @@ import { useNavigate , createSearchParams, Navigate, useSearchParams } from "rea
 export default function ItemTableAgenda({data}){
     const navigate =  useNavigate();
 
+    const goToAgenda = () =>
+        navigate({
+          pathname: '/agenda/nova-agenda',
+          search: `${createSearchParams({doctorID: data.doctorID, speciality: data.speciality})}`,
+        });
+
         function MudarStatus(){
    
     fetch(`https://localhost:7036/api/Doctor/${data.doctorID}/speciality/${data.speciality}/mudarstatus`,{
@@ -26,11 +32,17 @@ export default function ItemTableAgenda({data}){
         <tbody>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  Especialidade
+                  {data.specialityName}
                 </th>
-        
+                <td className="px-6 py-4 text-right">
+                
+                <button      onClick={goToAgenda}  className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
+            
+            
+            </td>
 
             </tr>
+          
         </tbody>
    )
 }

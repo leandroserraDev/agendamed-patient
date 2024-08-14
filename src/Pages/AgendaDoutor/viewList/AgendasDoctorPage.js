@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import '../../../input.css';
 import TableEspecialidade from './TableAgendaDoutor'
 import { useNavigate,createSearchParams } from 'react-router-dom';
+import TableAgendaDoutor from './TableAgendaDoutor';
 
 
 
 
 function AgendasDoctorPage(){
-    const [especialidades, setEspecialidade] = useState([]);
+    const [agenda, setAgenda] = useState([]);
 const navigate = useNavigate();
 const goToNewAgenda = () =>
    navigate({
@@ -23,7 +24,7 @@ const goToNewAgenda = () =>
    )
      .then(  data => {
 
-      setEspecialidade(data.data)
+      setAgenda(data)
    
      })
      .catch(error => console.error(error));
@@ -45,7 +46,7 @@ const goToNewAgenda = () =>
          Nova Agenda
       </button>
     </div>
-    <TableEspecialidade especialidades={especialidades}/>
+    <TableAgendaDoutor agenda={agenda}/>
     </>
     )
 }

@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import NestedArray from "./nestedFieldArray";
 import '../../../../input.css';
 import { format } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
+import { useSearchParams } from "react-router-dom";
 let renderCount = 0;
 
-export default function Fields({ control, register, setValue, getValues }) {
+export default function Fields({ control, register, setValue, getValues,reset}) {
+  const[searchParams, setSearchParams] = useSearchParams();
   const { fields, append, remove, prepend } = useFieldArray({
     control,
     name: "schedule"
   });
+
+
  const dayName =[
 
  {
@@ -39,7 +43,7 @@ export default function Fields({ control, register, setValue, getValues }) {
 
  }
 ] 
-  renderCount++;
+
 
   return (
     <div className="flex flex-col">
@@ -49,13 +53,30 @@ export default function Fields({ control, register, setValue, getValues }) {
           return (
             
             <li key={item.id}>
-              <select  {...register(`schedule.${index}.dayOfWeek`)}>
-              <option value="" disabled selected>Selecione uma opção</option>
+              <select  
+              defaultValue={item.dayOfWeek}   {...register(`schedule.${index}.dayOfWeek`)}>
+              <option disabled  selected>Selecione uma opção</option>
 
                 {
                   dayName.map((item, index)=>{
                     return(
-                    <option value={item.id}>{item.name}</option>
+                      <>
+                         {
+                          
+                         fields.filter(obj => obj.dayOfWeek == item.id
+                          
+
+                         ).length <=0 ?
+                         
+                        <option key={item.id} value={item.id}>{item.name}</option>
+:
+<option disabled={true} key={item.id} value={item.id}>{item.name}</option>
+
+
+                        }
+                      </>
+                   
+
                     )
                   })
                 }
@@ -64,7 +85,7 @@ export default function Fields({ control, register, setValue, getValues }) {
               <button type="button" onClick={() => remove(index)}>
                 Delete
               </button>
-              <NestedArray nestIndex={index} {...{ control, register }} />
+              <NestedArray nestIndex={index} {...{ control, register,reset,  }} />
             </li>
           );
         })}
@@ -72,55 +93,18 @@ export default function Fields({ control, register, setValue, getValues }) {
 
       <section>
         <button
+
           type="button"
           onClick={() => {
             append();
           }}
         >
-          append
+          +
         </button>
 
-        {/* <button
-          type="button"
-          onClick={() => {
-            setValue("test", [
-              ...(getValues().test || []),
-              {
-                name: "append",
-                nestedArray: [{ field1: "append", field2: "append" }]
-              }
-            ]);
-          }}
-        >
-          Append Nested
-        </button> */}
-
-        {/* <button
-          type="button"
-          onClick={() => {
-            prepend({ name: "append" });
-          }}
-        >
-          prepend
-        </button> */}
-
-        {/* <button
-          type="button"
-          onClick={() => {
-            setValue("schedule", [
-              {
-                name: "dayOfWeek",
-                nestedArray: []
-              },
-              ...(getValues().test || [])
-            ]);
-          }}
-        >
-          prepend Nested
-        </button> */}
+       
       </section>
 
-      <span className="counter">Render Count: {renderCount}</span>
     </div>
   );
 }

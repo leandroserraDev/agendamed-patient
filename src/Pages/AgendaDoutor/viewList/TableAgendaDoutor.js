@@ -2,7 +2,6 @@
 import ItemTableAgenda from './ItemTableAgenda.js';
 
 function TableAgendaDoutor({agenda}){
-    console.log(agenda);
 
     return (
     <div className=" absolute w-full h-full">
