@@ -1,10 +1,10 @@
 
-import ItemTableAgenda from './ItemTableAgenda.js';
+import ItemTableConsulta from './ItemTableConsulta.js';
 
-function TableAgendaDoutor({agenda}){
+function TableConsulta({consultas}){
 
     return (
-    <div className=" absolute w-full h-full">
+    <div className=" w-full h-full">
         
         <div className="flex flex-col justify-center content-center">
 
@@ -16,12 +16,21 @@ function TableAgendaDoutor({agenda}){
                 <th scope="col" className="px-6 py-3">
                     Especialidade
                 </th>
-               
+                <th scope="col" className="px-6 py-3">
+                    Doutor
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Data da Consulta
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Status
+                </th>
+             
             </tr>
         </thead>
-        {agenda && agenda.map((item, index) =>{
+        {consultas && consultas.map((item, index) =>{
                 return(
-                    <ItemTableAgenda key={index} data={item}/>   
+                    <ItemTableConsulta key={index} data={item}/>   
                 )
 
             })}
@@ -34,4 +43,4 @@ function TableAgendaDoutor({agenda}){
 
 }
 
-export default TableAgendaDoutor;
+export default TableConsulta;

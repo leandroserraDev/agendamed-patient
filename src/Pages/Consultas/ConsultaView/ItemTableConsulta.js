@@ -1,7 +1,7 @@
 import { useNavigate , createSearchParams, Navigate } from "react-router-dom";
 
 
-function ItemDoctor({data}){
+function ItemTableConsulta({data}){
     const navigate =  useNavigate();
 
     const goToDoctor = () =>
@@ -41,4 +41,4 @@ function ItemDoctor({data}){
    )
 }
 
-export default ItemDoctor;
+export default ItemTableConsulta;

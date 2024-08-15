@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { jwtDecode } from 'jwt-decode';
 import { useState } from 'react';
 
-function Login({data}){
+function CreateUser({data}){
 
     const navigate = useNavigate();
     const { register, control, handleSubmit, reset, trigger, setError} = useForm({
@@ -12,7 +12,7 @@ function Login({data}){
     const[errorAPI, setErrorAPI] = useState([]);
 
     async function submitData(data){
-       await  fetch("https://localhost:7036/api/Auth", {
+       await  fetch("https://localhost:7036/api/Patient", {
             method: "POST",
             body: JSON.stringify(data),
             headers: {
@@ -26,31 +26,38 @@ function Login({data}){
         
         )
           .then(  data => {
-            var decodeToken = jwtDecode(data.data);
-            console.log(decodeToken);
 
-            if(decodeToken.role != "Patient"){
-              setErrorAPI({message:[{id: 1, message: "Sem acesso"}]})
+            if(!data.success){
+
+              setErrorAPI(data)
               return;
             }
+            var decodeToken = jwtDecode(data.data);
+            console.log(decodeToken);
 
             localStorage.setItem("token", data.data);
             localStorage.setItem("id",decodeToken.sid);
             localStorage.setItem("userName",decodeToken.name);
             localStorage.setItem("email",decodeToken.email);
+
+            decodeToken.role.map((item,k) =>{
+            localStorage.setItem("email",decodeToken.email);
+
+            })
             navigate({pathname:"/home"});
         
           })
-          .catch(error => console.error(error));
+          .catch(error =>{
+          });
     }
 
     return(
-        <div className="flex flex-row w-full justify-center items-center ">
+      <div className="flex flex-row w-full justify-center items-center ">
 
         <form className="flex flex-col  w-[300px] border border-black rounded p-3 " onSubmit={handleSubmit(data =>submitData(data))}>
           <ul className="flex flex-col">
 
-          <label for="E-mail" class="block mb-1 ml-4 text-sm font-medium text-gray-900 dark:text-white">E-mail</label>
+          <label for="Nome" class="block mb-1 ml-4 text-sm font-medium text-gray-900 dark:text-white">Nome</label>
           <input
           className='
           pl-2
@@ -59,22 +66,46 @@ function Login({data}){
        "block  rounded-md border-0 mb-4  w-[90%] text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-white focus:ring-1 focus:ring-indigo-600 sm:text-sm sm:leading-6"
            '
            
-          type='email'
-            {...register("email",  {  required: "Please enter your email." })} // custom message
+            {...register("nome",  {  required: "Please enter your email." })} // custom message
           />
-                    <label for="Password" class="block mb-1 ml-4 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-
+                   
+          <label for="Sobrenome" class="block mb-1 ml-4 text-sm font-medium text-gray-900 dark:text-white">Sobrenome</label>
           <input
           className='
           pl-2
            self-center
            h-[25px]
-       "block  rounded-md border-0  w-[90%] text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-white focus:ring-1 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+       "block  rounded-md border-0 mb-4  w-[90%] text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-white focus:ring-1 focus:ring-indigo-600 sm:text-sm sm:leading-6"
            '
-          type='password'
-            {...register("password", { required: "Please enter your password." })} // custom message
+           
+            {...register("sobrenome",  {  required: "Please enter your email." })} // custom message
+          />
+
+<label for="Email" class="block mb-1 ml-4 text-sm font-medium text-gray-900 dark:text-white">E-mail</label>
+          <input
+          className='
+          pl-2
+           self-center
+           h-[25px]
+       "block  rounded-md border-0 mb-4  w-[90%] text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-white focus:ring-1 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+           '
+           type='email'
+            {...register("email",  {  required: "Please enter your email." })} // custom message
+          />
+
+<label for="Password" class="block mb-1 ml-4 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+          <input
+          className='
+          pl-2
+           self-center
+           h-[25px]
+       "block  rounded-md border-0 mb-4  w-[90%] text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-white focus:ring-1 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+           '
+           type='password'
+            {...register("password",  {  required: "Please enter your email." })} // custom message
           />
           </ul>
+          
     
           <input type="submit" />
           {
@@ -89,9 +120,10 @@ function Login({data}){
             })
           }
         </form>
+
+      
         </div>
-    
 )
 }
 
-export default Login;
+export default CreateUser;

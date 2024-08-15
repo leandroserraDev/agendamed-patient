@@ -1,12 +1,11 @@
 import { useSearchParams } from 'react-router-dom';
-import DoctorForm from './DoctorForms.js'
+import PatientForm from './PatientForm.js'
 import { useEffect, useState } from 'react';
-function DoctorCrudPage(){
+
+export default function PatientPageCreate(){
 
 
     return(<>
-    <DoctorForm />
+    <PatientForm />
     </>)
 }
-
-export default DoctorCrudPage;

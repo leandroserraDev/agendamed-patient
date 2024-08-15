@@ -1,5 +1,5 @@
 {
-  "name": "agendamed-doctor",
+  "name": "agendamed-patient",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "date-fns": "^3.6.0",
     "jwt-decode": "^4.0.0",
+    "moment": "^2.30.1",
     "react": "^18.3.1",
     "react-day-picker": "^9.0.8",
     "react-dom": "^18.3.1",

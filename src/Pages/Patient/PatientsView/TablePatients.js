@@ -1,8 +1,7 @@
 
-import { es } from 'date-fns/locale/es';
-import ItemTableEspecialidade from './ItemTableEspecialidade.js';
+import ItemPatient from './ItemPatient.js';
 
-function TableEspecialidade({especialidades}){
+function PatientsPage({doctors}){
 
     return (
     <div className=" absolute w-full h-full">
@@ -18,16 +17,20 @@ function TableEspecialidade({especialidades}){
                     Nome
                 </th>
                 <th scope="col" className="px-6 py-3">
-                    Descrição
+                    Email
                 </th>
                 <th scope="col" className="px-6 py-3">
-                    Ativo
+                    CRM
                 </th>
+                <th scope="col" className="px-6 py-3">
+                    Especialidade
+                </th>
+             
             </tr>
         </thead>
-        {especialidades && especialidades.map((item, index) =>{
+        {doctors && doctors.map((item, index) =>{
                 return(
-                    <ItemTableEspecialidade key={index} data={item}/>   
+                    <ItemPatient key={index} data={item}/>   
                 )
 
             })}
@@ -40,4 +43,4 @@ function TableEspecialidade({especialidades}){
 
 }
 
-export default TableEspecialidade;
+export default PatientsPage;

@@ -1,38 +1,36 @@
 import { useEffect, useState } from 'react';
 import '../../../input.css';
-import TableEspecialidade from './TableEspecialidade'
+import TablePatients from './TablePatients';
 import { useNavigate,createSearchParams } from 'react-router-dom';
 
 
 
 
-function EspecialidadesDoctorPage(){
-    const [especialidades, setEspecialidade] = useState([]);
+function PatientsPage(){
+    const [_doctorList, SetDoctorList] = useState([]);
 const navigate = useNavigate();
-const goToNewEspecialidade = () =>
+const goToNewDoctor = () =>
    navigate({
-     pathname: '/especialidade/doctor'
+     pathname: '/doctor'
    });
     useEffect(() =>{
 
-        fetch(`https://localhost:7036/api/Doctor/${localStorage.getItem("id")}/speciality`)
+        fetch('https://localhost:7036/api/Doctor')
      .then( response => {
         return response.json() 
      }
    
    )
      .then(  data => {
-
-      setEspecialidade(data.data)
+        SetDoctorList(data)
    
      })
      .catch(error => console.error(error));
-     
    },[])
     return (
     <>
     <div className='flex  justify-end m-2 '>
-      <button onClick={goToNewEspecialidade} className='
+      <button onClick={goToNewDoctor} className='
      duration-300
       hover:scale-105
       text-white
@@ -42,12 +40,12 @@ const goToNewEspecialidade = () =>
                        bg-gradient-to-tr from-cyan-600 to-cyan-900
                        shadow-[0px_1px_6px_0px_#00000024]
                        shadow-black'>
-         Nova especialidade
+         Novo médico
       </button>
     </div>
-    <TableEspecialidade especialidades={especialidades}/>
+    <TablePatients doctors={_doctorList}/>
     </>
     )
 }
 
-export default EspecialidadesDoctorPage;
+export default PatientsPage;

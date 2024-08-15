@@ -1,39 +1,37 @@
 import { useEffect, useState } from 'react';
 import '../../../input.css';
-import TableEspecialidade from './TableAgendaDoutor'
+import ConsultaPage from '../ConsultaPage.js';
 import { useNavigate,createSearchParams } from 'react-router-dom';
-import TableAgendaDoutor from './TableAgendaDoutor';
+import TableConsulta from './TableConsulta.js';
 
 
 
 
-function AgendasDoctorPage(){
-    const [agenda, setAgenda] = useState([]);
+function AgendasPage(){
+    const [_doctorList, SetDoctorList] = useState([]);
 const navigate = useNavigate();
-const goToNewAgenda = () =>
+const goToNewConsulta = () =>
    navigate({
-     pathname: '/agenda/nova-agenda'
+     pathname: '/agendar-consulta'
    });
     useEffect(() =>{
 
-        fetch(`https://localhost:7036/api/Doctor/${localStorage.getItem("id")}/schedule`)
+        fetch('https://localhost:7036/api/Doctor')
      .then( response => {
         return response.json() 
      }
    
    )
      .then(  data => {
-
-      setAgenda(data)
+        SetDoctorList(data)
    
      })
      .catch(error => console.error(error));
-     
    },[])
     return (
     <>
     <div className='flex  justify-end m-2 '>
-      <button onClick={goToNewAgenda} className='
+      <button onClick={goToNewDoctor} className='
      duration-300
       hover:scale-105
       text-white
@@ -43,12 +41,12 @@ const goToNewAgenda = () =>
                        bg-gradient-to-tr from-cyan-600 to-cyan-900
                        shadow-[0px_1px_6px_0px_#00000024]
                        shadow-black'>
-         Nova Agenda
+         Novo médico
       </button>
     </div>
-    <TableAgendaDoutor agenda={agenda}/>
+    <TableConsulta doctors={_doctorList}/>
     </>
     )
 }
 
-export default AgendasDoctorPage;
+export default AgendasPage;
