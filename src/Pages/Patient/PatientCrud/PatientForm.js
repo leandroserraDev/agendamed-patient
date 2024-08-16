@@ -14,7 +14,7 @@ function PatientForm() {
 
   useEffect(() =>{
 
-      fetch(`https://localhost:7036/api/Patient`,{
+      fetch(`${process.env.REACT_APP_URI_API}/Patient`,{
         headers:{
           'Authorization': `Bearer ${localStorage.getItem("token")}`
         }
@@ -34,7 +34,7 @@ function PatientForm() {
 
 
   function submitData(data){
-    fetch(`https://localhost:7036/api/patient/${patient !=  null? patient.id:""}`, {
+    fetch(`${process.env.REACT_APP_URI_API}/patient/${patient !=  null? patient.id:""}`, {
       method: `${patient != null ? "PUT" : "POST"}`,
       body: JSON.stringify(data),
       headers: {

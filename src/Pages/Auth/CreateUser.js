@@ -12,7 +12,7 @@ function CreateUser({data}){
     const[errorAPI, setErrorAPI] = useState([]);
 
     async function submitData(data){
-       await  fetch("https://localhost:7036/api/Patient", {
+       await  fetch(`${process.env.REACT_APP_URI_API}/Patient`, {
             method: "POST",
             body: JSON.stringify(data),
             headers: {
@@ -33,8 +33,6 @@ function CreateUser({data}){
               return;
             }
             var decodeToken = jwtDecode(data.data);
-            console.log(decodeToken);
-
             localStorage.setItem("token", data.data);
             localStorage.setItem("id",decodeToken.sid);
             localStorage.setItem("userName",decodeToken.name);

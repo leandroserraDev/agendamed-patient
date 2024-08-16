@@ -24,7 +24,7 @@ function Form(){
 
       if(searchParams.get("id") != null){
 
-        fetch(`https://localhost:7036/api/patient/appointment/${searchParams.get("id")}`)
+        fetch(`${process.env.REACT_APP_URI_API}/patient/appointment/${searchParams.get("id")}`)
         .then( response => {
            return response.json() 
         }
@@ -59,7 +59,7 @@ function Form(){
 
       }
 
-      fetch(`https://localhost:7036/api/Appointment`, {
+      fetch(`${process.env.REACT_APP_URI_API}/Appointment`, {
         method: `POST`,
         body: JSON.stringify(newDate),
         headers: {
@@ -90,7 +90,7 @@ function Form(){
     
     function CancelAppointment(){
       console.log(consulta.id)
-      fetch(`https://localhost:7036/api/Appointment/${consulta.id}`,{
+      fetch(`${process.env.REACT_APP_URI_API}/Appointment/${consulta.id}`,{
         method:"PATCH",
         headers: {
           "Content-type": "application/json; charset=UTF-8",
@@ -121,7 +121,7 @@ function Form(){
         SpecialityID: getValues().specialityID
 
       }
-      fetch(`https://localhost:7036/api/Appointment/${searchParams.get("id")}/reagendar`, {
+      fetch(`${process.env.REACT_APP_URI_API}/Appointment/${searchParams.get("id")}/reagendar`, {
         method: `PUT`,
         body: JSON.stringify(newData),
         headers: {
@@ -154,7 +154,7 @@ function Form(){
 
       if(getValue !=null){
 
-      fetch(`https://localhost:7036/api/Doctor/speciality/${getValue.specialityID}`)
+      fetch(`${process.env.REACT_APP_URI_API}/Doctor/speciality/${getValue.specialityID}`)
       .then( response => {
          return response.json() 
       }
@@ -173,7 +173,7 @@ function Form(){
       
       var getValue = getValues();
 
-      fetch(`https://localhost:7036/api/Doctor/scheduleTime?` + new URLSearchParams({
+      fetch(`${process.env.REACT_APP_URI_API}/Doctor/scheduleTime?` + new URLSearchParams({
         doctorID: getValue.doctorID,
         specialityID: getValue.specialityID,
         data: getValue.data

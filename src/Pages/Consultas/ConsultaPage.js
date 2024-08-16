@@ -9,7 +9,7 @@ export default function ConsultaPage(){
 
     useEffect(() =>{
 
-        fetch('https://localhost:7036/api/Doctor')
+        fetch(`${process.env.REACT_APP_URI_API}/Doctor`)
      .then( response => {
         return response.json() 
      }
