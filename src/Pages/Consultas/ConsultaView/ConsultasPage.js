@@ -7,8 +7,8 @@ import TableConsulta from './TableConsulta.js';
 
 
 
-function AgendasPage(){
-    const [_doctorList, SetDoctorList] = useState([]);
+function ConsultasPage(){
+    const [consultas, setConsultas] = useState([]);
 const navigate = useNavigate();
 const goToNewConsulta = () =>
    navigate({
@@ -16,14 +16,20 @@ const goToNewConsulta = () =>
    });
     useEffect(() =>{
 
-        fetch('https://localhost:7036/api/Doctor')
+        fetch('https://localhost:7036/api/patient/appointments',{
+          headers: {
+         "Content-type": "application/json; charset=UTF-8",
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
+          }
+        })
      .then( response => {
         return response.json() 
      }
    
    )
      .then(  data => {
-        SetDoctorList(data)
+      console.log(data)
+      setConsultas(data.data)
    
      })
      .catch(error => console.error(error));
@@ -31,7 +37,7 @@ const goToNewConsulta = () =>
     return (
     <>
     <div className='flex  justify-end m-2 '>
-      <button onClick={goToNewDoctor} className='
+      <button onClick={goToNewConsulta} className='
      duration-300
       hover:scale-105
       text-white
@@ -41,12 +47,12 @@ const goToNewConsulta = () =>
                        bg-gradient-to-tr from-cyan-600 to-cyan-900
                        shadow-[0px_1px_6px_0px_#00000024]
                        shadow-black'>
-         Novo médico
+         Agendar Consulta
       </button>
     </div>
-    <TableConsulta doctors={_doctorList}/>
+    <TableConsulta consultas={consultas}/>
     </>
     )
 }
 
-export default AgendasPage;
+export default ConsultasPage;

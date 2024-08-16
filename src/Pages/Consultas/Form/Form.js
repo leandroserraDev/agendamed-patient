@@ -1,27 +1,159 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import '../../../input.css'
 import { useForm } from 'react-hook-form';
 import { jwtDecode } from 'jwt-decode';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getValue } from '@testing-library/user-event/dist/utils';
 import moment from 'moment';
+import { parse, set } from 'date-fns';
 
-function Form({data}){
+
+function Form(){
 
     const navigate = useNavigate();
     const { register, control, handleSubmit, reset, trigger, setError,getValues} = useForm({
     });
     const[doctors, setDoctors] = useState([]);
     const[schedule, setSchedule] = useState([]); 
+    const[consulta, setConsulta] = useState([]);
 
     const[errorAPI, setErrorAPI] = useState([]);
+    const[searchParams, setSearchParams] = useSearchParams();
 
+    useEffect(()=>{
+
+      if(searchParams.get("id") != null){
+
+        fetch(`https://localhost:7036/api/patient/appointment/${searchParams.get("id")}`)
+        .then( response => {
+           return response.json() 
+        }
+      
+       )
+        .then(  data => {
+          setConsulta(data.data)
+           reset({
+            specialityID:data.data.specialityID,
+            doctorID:data.data.doctorID,
+            data: moment(data.data.date).format("YYYY-MM-DD"),
+            hora: data.data.date.split("T")[1]
+           });
+           GetDoctorBySpecialitySelected();
+           GetHourScheduleDoctorDay();
+        })
+        .catch(error => console.error(error));
+   
+
+      }
+
+
+    },[])
     async function submitData(data){
-       console.log(data)
+      var newDate ={
+        data:data.data,
+        doctorID:data.doctorID,
+        patientID: localStorage.getItem("id"),
+        dateAppointment: data.data + "T" +data.hora,
+        hora:data.hora,
+        SpecialityID: data.specialityID
+
+      }
+
+      fetch(`https://localhost:7036/api/Appointment`, {
+        method: `POST`,
+        body: JSON.stringify(newDate),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
+  
+        }
+      })
+      .then( response => {
+         return response.json() 
+      }
+    
+    )
+      .then(  data => {
+  
+         if(data.success){
+          alert(consulta != null ? "Editado" : "Cadastrado")
+          navigate({pathname:"/home"})
+  
+         }
+  
+         setErrorAPI(data)
+    
+      })
+      .catch(error => console.error(error));
+       console.log(newDate)
     }
+    
+    function CancelAppointment(){
+      console.log(consulta.id)
+      fetch(`https://localhost:7036/api/Appointment/${consulta.id}`,{
+        method:"PATCH",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
+  
+        }
+      })
+      .then( response => {
+        console.log(response)
+         return response.json() 
+      }
+    
+    )
+      .then(  data => {
+       alert("Consulta cancelada");
+       navigate({pathname:"/consultas"})
+    
+      })
+      .catch(error => console.error(error));
+    }
+    function Reagendar(){
+      var newData ={
+        data:getValues().data,
+        doctorID:getValues().doctorID,
+        patientID: localStorage.getItem("id"),
+        dateAppointment: getValues().data + "T" +getValues().hora,
+        hora:getValues().hora,
+        SpecialityID: getValues().specialityID
+
+      }
+      fetch(`https://localhost:7036/api/Appointment/${searchParams.get("id")}/reagendar`, {
+        method: `PUT`,
+        body: JSON.stringify(newData),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      .then( response => {
+         return response.json() 
+      }
+    
+    )
+      .then(  data => {
+  
+         if(data.success){
+          alert(consulta != null ? "Editado" : "Cadastrado")
+          navigate({pathname:"/home"})
+  
+         }
+  
+         setErrorAPI(data)
+    
+      })
+      .catch(error => console.error(error));
+    }
+    
 
     const  GetDoctorBySpecialitySelected=()=>{
       var getValue =getValues();
+
+      if(getValue !=null){
+
       fetch(`https://localhost:7036/api/Doctor/speciality/${getValue.specialityID}`)
       .then( response => {
          return response.json() 
@@ -35,11 +167,12 @@ function Form({data}){
       })
       .catch(error => console.error(error));
     }
-    function  GetHourScheduleDoctorDay(){
-      var getValue = getValues();
-      console.log(moment(getValue.data).format())
 
-      console.log(getValue);
+    }
+    function  GetHourScheduleDoctorDay(){
+      
+      var getValue = getValues();
+
       fetch(`https://localhost:7036/api/Doctor/scheduleTime?` + new URLSearchParams({
         doctorID: getValue.doctorID,
         specialityID: getValue.specialityID,
@@ -53,9 +186,20 @@ function Form({data}){
     
     )
       .then(  data => {
-        console.log(data)
-        setSchedule(data.data)
-    
+console.log(data);
+
+        if(data.success){
+        data.data.scheduleTime.push({time:getValues().hora});
+
+          setSchedule(data.data)
+          setErrorAPI([])
+
+        }else{
+
+          setSchedule([])
+       setErrorAPI(data)
+
+        }
       })
       .catch(error => console.error(error));
     }
@@ -74,13 +218,22 @@ function Form({data}){
            h-[25px]
        "block  rounded-md border-0 mb-4  w-[90%] text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-white focus:ring-1 focus:ring-indigo-600 sm:text-sm sm:leading-6"
            '
-           
+           disabled={searchParams.get("id")}
+           defaultValue={consulta.specialityID}
             {...register("specialityID",  {  required: "Please enter your email." }) } // custom message
-            onChange={e =>{
+            onChange={() =>{
+
+
              GetDoctorBySpecialitySelected()
             }}
           
           >
+              <option 
+            selected
+            disabled
+            value={0}>
+            Selecione uma opção
+            </option>
             <option 
             
             value={1}>
@@ -96,6 +249,9 @@ function Form({data}){
 
 <label for="Email" class="block mb-1 ml-4 text-sm font-medium text-gray-900 dark:text-white">Médicos</label>
           <select
+                    defaultValue={consulta.doctorID}
+                    value={consulta.doctorID}
+             disabled={searchParams.get("id")}
           className='
           pl-2
            self-center
@@ -109,6 +265,7 @@ function Form({data}){
             <option  selected>
               Selecione um valor
             </option>
+
             {doctors && doctors.map((item,k)=>{
               return(
                 <option key={k} value={item.id}>
@@ -116,10 +273,17 @@ function Form({data}){
                 </option>
               )
             }) }
+
             </select>
 
 <label for="Data" class="block mb-1 ml-4 text-sm font-medium text-gray-900 dark:text-white">Data</label>
+          
+
           <input
+           disabled={!searchParams.get("reagendar") && searchParams.get("id") != null }
+          defaultValue={consulta.dataAppointment}
+          value={consulta.dateAppointment}
+          min={new Date().toISOString().split('T')[0]}
           className='
           pl-2
            self-center
@@ -128,36 +292,74 @@ function Form({data}){
            '
          
 
+           {...register("data",  {  required: "Please enter your email." })} // custom message
+           onSelect={(e) =>{
+
+             GetHourScheduleDoctorDay()
+
+           }
+            }
+
+         
            type='date'
-            {...register("data",  {  required: "Please enter your email." })} // custom message
-            onChange={e =>{
-              GetHourScheduleDoctorDay()
-             }}
+          
           />
+ 
 
 <label for="Email" class="block mb-1 ml-4 text-sm font-medium text-gray-900 dark:text-white">Horários</label>
           <select
+                defaultValue={getValues().hora}
+             
+
+
+     disabled={!searchParams.get("reagendar") && searchParams.get("id") != null }
           className='
           pl-2
            self-center
            h-[25px]
        "block  rounded-md border-0 mb-4  w-[90%] text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-white focus:ring-1 focus:ring-indigo-600 sm:text-sm sm:leading-6"
            '
-           type='email'
-            {...register("email",  {  required: "Please enter your email." })} // custom message
+          
+            {...register("hora",  {  required: "Please enter your email." })} // custom message
           >
-            {schedule.scheduleTime && schedule.scheduleTime.map((item,k)=>{
+
+            { schedule != null && schedule.scheduleTime && schedule.scheduleTime.map((item,k)=>{
               return(
-                <option key={k} value={item.time}>
+                
+                <option 
+                
+                key={k} value={item.time}>
                     {item.time}
                 </option>
               )
             }) }
             </select>
           </ul>
+          <div className='flex flex-row justify-center pr-1'>
           
-    
-          <input type="submit" />
+          <button type="submit" 
+          hidden={consulta.id != null}
+          className='border mr-1 rounded-md bg-blue-100 hover:bg-blue-200 duration-300 p-1' >
+          Enviar
+            
+            </button>
+         
+          </div>
+          <button type='button' 
+              onClick={(e)=>{
+              if(searchParams.get("reagendar")){
+                Reagendar()
+                
+              }else{
+                CancelAppointment()
+
+              }
+              
+              }}
+
+            hidden={consulta.id == null} className='border ml-1  rounded-md bg-blue-100 hover:bg-blue-200 duration-300 p-1  ' >
+         {searchParams.get("reagendar") ? "Reagendar": "Cancelar Consulta" }
+            </button>
           {
             errorAPI.error && errorAPI.error.map((item,index)=>{
               return(

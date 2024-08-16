@@ -14,6 +14,7 @@ import PatientPage from './Pages/Patient/PatientCrud/PatientPage.js';
 import AuthPage from './Pages/Auth/AuthPage.js';
 import Home from './Pages/Home/Home.js'
 import ConsultaPage from './Pages/Consultas/ConsultaPage.js';
+import ConsultasPage from './Pages/Consultas/ConsultaView/ConsultasPage.js'
 import FormPage from './Pages/Consultas/Form/FormPage.js';
 const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
     
       {
         path:"consultas",
-        element: <ConsultaPage/>
+        element: <ConsultasPage/>
       },
       {
         path:"agendar-consulta",

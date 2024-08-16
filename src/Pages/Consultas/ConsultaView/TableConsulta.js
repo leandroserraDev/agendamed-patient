@@ -2,7 +2,7 @@
 import ItemTableConsulta from './ItemTableConsulta.js';
 
 function TableConsulta({consultas}){
-
+console.log(consultas);
     return (
     <div className=" w-full h-full">
         

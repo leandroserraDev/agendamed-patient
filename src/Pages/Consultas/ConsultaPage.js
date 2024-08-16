@@ -42,7 +42,7 @@ export default function ConsultaPage(){
          Nova Consulta
       </button>
     </div>
-            <TableConsulta consultas={[]}/>
+            <TableConsulta consultas={consultas}/>
         </div>
     )
 }
