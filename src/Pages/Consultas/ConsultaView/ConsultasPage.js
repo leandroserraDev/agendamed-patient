@@ -32,7 +32,9 @@ const goToNewConsulta = () =>
       setConsultas(data.data)
    
      })
-     .catch(error => console.error(error));
+     .catch(error => {
+      console.error(error)
+     });
    },[])
     return (
     <>

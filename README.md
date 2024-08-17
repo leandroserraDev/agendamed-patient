@@ -4,6 +4,19 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
+
+
+Install depency for un project
+
+## `npm i --save -force`
+
+
+In the project directory modify a variable  
+
+## `REACT_APP_URI_API= --> Value to localhost api`
+
+
+
 In the project directory, you can run:
 
 ### `npm start`

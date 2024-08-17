@@ -24,7 +24,12 @@ function Form(){
 
       if(searchParams.get("id") != null){
 
-        fetch(`${process.env.REACT_APP_URI_API}/patient/appointment/${searchParams.get("id")}`)
+        fetch(`${process.env.REACT_APP_URI_API}/patient/appointment/${searchParams.get("id")}`,{
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            'Authorization': `Bearer ${localStorage.getItem("token")}`
+          }
+        })
         .then( response => {
            return response.json() 
         }
@@ -89,7 +94,6 @@ function Form(){
     }
     
     function CancelAppointment(){
-      console.log(consulta.id)
       fetch(`${process.env.REACT_APP_URI_API}/Appointment/${consulta.id}`,{
         method:"PATCH",
         headers: {
@@ -154,7 +158,12 @@ function Form(){
 
       if(getValue !=null){
 
-      fetch(`${process.env.REACT_APP_URI_API}/Doctor/speciality/${getValue.specialityID}`)
+      fetch(`${process.env.REACT_APP_URI_API}/Doctor/speciality/${getValue.specialityID}`,{
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+      })
       .then( response => {
          return response.json() 
       }
@@ -177,7 +186,12 @@ function Form(){
         doctorID: getValue.doctorID,
         specialityID: getValue.specialityID,
         data: getValue.data
-    }).toString())
+    }).toString(),{
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+      }
+    })
 
       .then( response => {
 
