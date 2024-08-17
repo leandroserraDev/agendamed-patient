@@ -26,11 +26,13 @@ function Login({data}){
         
         )
           .then(  data => {
-            var decodeToken = jwtDecode(data.data);
-            if(decodeToken.role != "Patient"){
-              setErrorAPI({message:[{id: 1, message: "Sem acesso"}]})
+
+            if(!data.success){
+              setErrorAPI(data)
               return;
             }
+            
+            var decodeToken = jwtDecode(data.data);
 
             localStorage.setItem("token", data.data);
             localStorage.setItem("id",decodeToken.sid);
